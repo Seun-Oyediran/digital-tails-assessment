@@ -1,0 +1,25 @@
+.app_content__box__right {
+  &__category {
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: -0.04em;
+    color: #a5a4a2;
+
+    @include screen("sm") {
+      font-size: 17px;
+    }
+  }
+
+  &__info {
+    &__title {
+      font-weight: 400;
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      color: #4f4f4f;
+
+      @include screen("sm") {
+        font-size: 15px;
+      }
+    }
+  }
+}

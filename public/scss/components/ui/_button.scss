@@ -1,0 +1,35 @@
+.app_ui_button {
+  background-color: #ff5500;
+  font-size: 15px;
+}
+
+// .app_ui_button.contained {
+//   background-color: #ff5500;
+// }
+
+.app_ui_button.lg {
+  height: 45px;
+  padding: 13px 20px;
+}
+
+.app_ui_button.sm {
+  height: 30px;
+  padding: 0 20px;
+}
+
+.app_ui_button.orange {
+  background-color: #ff5500;
+}
+
+.app_ui_button.br-lg {
+  border-radius: 8px;
+}
+
+.app_ui_button.br-xxl {
+  border-radius: 40px;
+}
+
+.app_ui_button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
