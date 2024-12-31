@@ -1,6 +1,7 @@
 import {
   ActionType,
   AppActions,
+  SetLoadingProgress,
   SetTableDepth,
   SetTableFeet,
   SetTableHeight,
@@ -25,6 +26,13 @@ export function appReducer(state: AppState, action: AppActions): AppState {
 
     case ActionType.SetTableHeight:
       return { ...state, height: action.payload };
+
+    case ActionType.SetLoadingProgress:
+      return {
+        ...state,
+        loadingProgress: action.payload,
+        loading: action.payload !== 100,
+      };
 
     default:
       return state;
@@ -62,6 +70,13 @@ export const setTableDepth = (payload: number): SetTableDepth => {
 export const setTableHeight = (payload: number): SetTableHeight => {
   return {
     type: ActionType.SetTableHeight,
+    payload,
+  };
+};
+
+export const setLoadingProgress = (payload: number): SetLoadingProgress => {
+  return {
+    type: ActionType.SetLoadingProgress,
     payload,
   };
 };

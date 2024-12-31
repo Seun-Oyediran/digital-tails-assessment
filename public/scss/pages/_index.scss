@@ -12,9 +12,16 @@
   height: 100%;
   flex: 1;
   overflow: hidden;
+  position: relative;
 
   @include screen("md") {
     height: 60%;
+  }
+
+  &__spinner {
+    position: absolute;
+    top: 2rem;
+    right: 1rem;
   }
 }
 

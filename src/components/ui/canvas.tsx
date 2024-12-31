@@ -1,9 +1,11 @@
 "use client";
 import { tableFeetOptions } from "@/lib/utils/static";
 import { useAppContext } from "@/state/context";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
+import { Loader, RenderIf, Spinner } from "../shared";
+import { setLoadingProgress } from "@/state/reducer";
 
 const BACKGROUND = 0xf1f1f1;
 const HALF_LEG_WIDTH = 0.015;
@@ -35,8 +37,9 @@ const DEFAULT_TABLE_LEG_POSITIONS = [
 ];
 
 export function Canvas() {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
 
+  const [textureLoading, setTextureLoading] = useState(false);
   const loadedTextures = useRef<Map<string, THREE.Material>>(new Map()).current;
 
   const refContainer = useRef<HTMLDivElement | null>(null);
@@ -174,16 +177,8 @@ export function Canvas() {
 
     const loadingManager = new THREE.LoadingManager();
 
-    loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      console.log(
-        "Loading file: " +
-          url +
-          ".\nLoaded " +
-          itemsLoaded +
-          " of " +
-          itemsTotal +
-          " files."
-      );
+    loadingManager.onProgress = (_url, itemsLoaded, itemsTotal) => {
+      dispatch(setLoadingProgress((itemsLoaded / itemsTotal) * 100));
     };
 
     loadingManager.onLoad = function () {
@@ -382,6 +377,7 @@ export function Canvas() {
 
   useEffect(() => {
     if (!tableTopRef.current) return;
+
     if (loadedTextures.has(state.tableTop.material)) {
       tableTopRef.current.material = loadedTextures.get(
         state.tableTop.material
@@ -389,21 +385,29 @@ export function Canvas() {
       return;
     }
 
+    setTextureLoading(true);
     const loader = new GLTFLoader();
     loader.load(state.tableTop.material, (gltf) => {
-      // Save the texture GLB into the loaded textures map
-
       gltf.scene.traverse((child) => {
         if (child instanceof THREE.Mesh && tableTopRef?.current) {
+          // Save the texture GLB into the loaded textures map
           loadedTextures.set(state.tableTop.material, child.material);
           tableTopRef.current.material = child.material;
         }
       });
+      setTextureLoading(false);
     });
   }, [state.tableTop.material]);
 
   return (
-    <div className="app_canvas_container" ref={refContainer}></div>
+    <div className="app_canvas_container" ref={refContainer}>
+      <Loader />
+      <RenderIf condition={textureLoading}>
+        <div className="app_canvas_container__spinner">
+          <Spinner />
+        </div>
+      </RenderIf>
+    </div>
 
     // <div ref={refContainer}></div>
   );

@@ -12,6 +12,8 @@ export const initialAppState = {
   defaultWidth: 1200,
   defaultDepth: 300,
   defaultHeight: 500,
+  loadingProgress: 0,
+  loading: true,
 };
 
 export type AppState = typeof initialAppState;
