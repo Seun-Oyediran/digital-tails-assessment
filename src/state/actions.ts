@@ -6,6 +6,7 @@ export enum ActionType {
   SetTableDepth,
   SetTableHeight,
   SetTableFeet,
+  SetLoadingProgress,
 }
 
 export interface SetTableTop {
@@ -33,9 +34,15 @@ export interface SetTableHeight {
   payload: number;
 }
 
+export interface SetLoadingProgress {
+  type: ActionType.SetLoadingProgress;
+  payload: number;
+}
+
 export type AppActions =
   | SetTableTop
   | SetTableWidth
   | SetTableDepth
   | SetTableHeight
-  | SetTableFeet;
+  | SetTableFeet
+  | SetLoadingProgress;
