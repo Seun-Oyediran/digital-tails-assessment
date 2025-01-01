@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 import { Loader, RenderIf, Spinner } from "../shared";
 import { setLoadingProgress } from "@/state/reducer";
+import { linearMapValue } from "@/lib/utils";
 
 const BACKGROUND = 0xf1f1f1;
 const HALF_LEG_WIDTH = 0.015;
@@ -101,26 +102,17 @@ export function Canvas() {
     controls.autoRotate = false;
     controls.autoRotateSpeed = 0.2; // 30
 
-    camera.position.z = 3;
+    camera.position.z = 3.5;
     camera.position.y = 0.3;
 
-    // Create an ambient light for general illumination
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); // Soft fill light
     scene.add(ambientLight);
-
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.3); // 1x1x1 meter
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Green color
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(-DEFAULT_LEG_POSITION_X, -0.15, 0);
-
-    // Add the cube to the scene
-    // scene.add(cube);
 
     // Key Light: Acts as the main source of light (like sunlight)
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
     keyLight.position.set(0, 5, 5); // Position above and to the side of the model
     keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 4096; // Higher resolution for detailed shadows
+    keyLight.shadow.mapSize.width = 4096;
     keyLight.shadow.mapSize.height = 4096;
     keyLight.shadow.camera.near = 1;
     keyLight.shadow.camera.far = 50;
@@ -132,8 +124,8 @@ export function Canvas() {
 
     // Fill Light: Softer light to reduce harsh shadows
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    fillLight.position.set(-5, 5, 5); // Opposite side of the key light
-    fillLight.castShadow = false; // No shadows for fill light
+    fillLight.position.set(-5, 5, 5);
+    fillLight.castShadow = false;
     scene.add(fillLight);
 
     // Back Light: Adds separation between the furniture and the background
@@ -158,10 +150,9 @@ export function Canvas() {
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -0.5 * Math.PI;
     floor.receiveShadow = true;
-    floor.position.y = DEFAULT_LEG_POSITION_Y - 0.01;
-    // scene.add(floor);
+    floor.position.y = DEFAULT_LEG_POSITION_Y - 0.005;
 
-    // Add Tabletop
+    // Tabletop
     const tableTopGeometry = new THREE.BoxGeometry(
       DEFAULT_TABLE_WIDTH,
       0.03,
@@ -171,7 +162,7 @@ export function Canvas() {
 
     const tableTop = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
 
-    tableTop.position.set(0, 0, 0);
+    tableTop.position.set(0, linearMapValue(heightRatio), 0);
     tableTop.castShadow = true;
     tableTopRef.current = tableTop;
 
@@ -183,9 +174,9 @@ export function Canvas() {
 
     loadingManager.onLoad = function () {
       scene.add(floor, tableTop);
-      console.log("Loading complete!");
     };
 
+    const feetPositionY = linearMapValue(heightRatio, 1, 2.4, -0.5, -0.487);
     const loader = new GLTFLoader(loadingManager);
     // LOAD TABLE LEGS
     loader.load(
@@ -200,11 +191,11 @@ export function Canvas() {
           }
         });
 
-        tableLeg.scale.set(1, DEFAULT_TABLE_HEIGHT_SCALE, 1);
+        tableLeg.scale.set(depthRatio, heightRatio, 1);
 
         DEFAULT_TABLE_LEG_POSITIONS.forEach((pos) => {
           const legClone = tableLeg.clone();
-          legClone.position.set(pos.x, pos.y, pos.z);
+          legClone.position.set(pos.x * widthRatio, pos.y, pos.z);
           legClone.rotation.y = pos.rotation;
           tableLegsRef.push(legClone);
           scene.add(legClone);
@@ -230,7 +221,11 @@ export function Canvas() {
 
         DEFAULT_FEET_POSITIONS.forEach((pos) => {
           const footClone = feet1.clone();
-          footClone.position.set(pos.x, pos.y, pos.z);
+          footClone.position.set(
+            pos.x * widthRatio,
+            feetPositionY,
+            pos.z * depthRatio
+          );
           tableFeet1Ref.push(footClone);
           scene.add(footClone);
         });
@@ -255,7 +250,11 @@ export function Canvas() {
 
         DEFAULT_FEET_POSITIONS.forEach((pos) => {
           const footClone = feet2.clone();
-          footClone.position.set(pos.x, pos.y, pos.z);
+          footClone.position.set(
+            pos.x * widthRatio,
+            feetPositionY,
+            pos.z * depthRatio
+          );
           tableFeet2Ref.push(footClone);
           scene.add(footClone);
         });
@@ -309,7 +308,7 @@ export function Canvas() {
       1
     );
 
-    // tableTopRef.current?.position.set(0, 1, 0);
+    tableTopRef.current?.position.set(0, linearMapValue(heightRatio), 0);
 
     tableFeet1Ref.forEach((foot, index) => {
       foot.position.lerp(
@@ -366,15 +365,20 @@ export function Canvas() {
     });
   }, [widthRatio, depthRatio, heightRatio]);
 
+  // FEET VARIANT CHANGE
   useEffect(() => {
+    const newPositionY = linearMapValue(heightRatio, 1, 2.4, -0.5, -0.487);
     tableFeet1Ref.forEach((foot) => {
       foot.visible = state.feet.value === tableFeetOptions[0].value;
+      foot.position.setY(newPositionY);
     });
     tableFeet2Ref.forEach((foot) => {
       foot.visible = state.feet.value === tableFeetOptions[1].value;
+      foot.position.setY(newPositionY);
     });
-  }, [state.feet.value]);
+  }, [state.feet.value, heightRatio]);
 
+  // MATERIAL CHANGE
   useEffect(() => {
     if (!tableTopRef.current) return;
 
@@ -408,7 +412,5 @@ export function Canvas() {
         </div>
       </RenderIf>
     </div>
-
-    // <div ref={refContainer}></div>
   );
 }

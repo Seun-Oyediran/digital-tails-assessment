@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { clamp } from "three/src/math/MathUtils.js";
 
 interface IProps {
@@ -12,10 +12,6 @@ interface IProps {
 export function Range(props: IProps) {
   const { label, max, min, value, onChange } = props;
   const [initialValue, setInitialValue] = useState(value);
-
-  useEffect(() => {
-    setInitialValue(value);
-  }, [value]);
 
   return (
     <div className="w-full app_range flex flex-col gap-1">
@@ -37,7 +33,10 @@ export function Range(props: IProps) {
             const value = Number(e?.target?.value);
             if (typeof value !== "number") return;
 
-            onChange(clamp(value, min, max));
+            const clampedValue = clamp(value, min, max);
+
+            setInitialValue(clampedValue);
+            onChange(clampedValue);
           }}
         />
         <input
@@ -48,6 +47,8 @@ export function Range(props: IProps) {
           className="w-full"
           onChange={(e) => {
             const value = Number(e?.target?.value);
+
+            setInitialValue(value);
             onChange(value);
           }}
         />
