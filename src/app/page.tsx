@@ -1,12 +1,11 @@
 "use client";
-import { Canvas, Ui } from "@/components/ui";
 import React from "react";
+import { Experience } from "@/components/ui";
 
 export default function Home() {
   return (
     <div className="app_container">
-      <Canvas />
-      <Ui />
+      <Experience />
     </div>
   );
 }
