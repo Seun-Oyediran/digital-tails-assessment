@@ -11,7 +11,7 @@ interface IFeetButton {
   active?: boolean;
 }
 
-function FeetButton(props: IFeetButton) {
+export function FeetButton(props: IFeetButton) {
   const { text, active = false, onClick } = props;
 
   return (

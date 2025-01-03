@@ -1,5 +1,5 @@
+import { clamp } from "@/lib/utils";
 import React, { useState } from "react";
-import { clamp } from "three/src/math/MathUtils.js";
 
 interface IProps {
   label: string;
