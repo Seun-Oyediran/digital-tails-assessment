@@ -100,17 +100,17 @@ export function Canvas() {
     controls.enablePan = !false;
     controls.dampingFactor = 0.1;
     controls.autoRotate = false;
-    controls.autoRotateSpeed = 0.2; // 30
+    controls.autoRotateSpeed = 0.2;
 
     camera.position.z = 3.5;
     camera.position.y = 0.3;
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); // Soft fill light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
 
     // Key Light: Acts as the main source of light (like sunlight)
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    keyLight.position.set(0, 5, 5); // Position above and to the side of the model
+    keyLight.position.set(0, 5, 5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 4096;
     keyLight.shadow.mapSize.height = 4096;
@@ -130,7 +130,7 @@ export function Canvas() {
 
     // Back Light: Adds separation between the furniture and the background
     const backLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    backLight.position.set(0, 5, -5); // Positioned behind the model
+    backLight.position.set(0, 5, -5);
     backLight.castShadow = false;
     scene.add(backLight);
 
