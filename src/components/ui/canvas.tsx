@@ -76,8 +76,6 @@ export function Canvas() {
     scene.background = new THREE.Color(BACKGROUND);
     scene.fog = new THREE.Fog(BACKGROUND, 20, 100);
 
-    // scene.background = new THREE.Color(0x000000);
-
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -302,6 +300,7 @@ export function Canvas() {
     };
   }, []);
 
+  // TABLE SIZE CHANGE
   useEffect(() => {
     tableTopRef.current?.scale.lerp(
       new THREE.Vector3(1 * widthRatio, 1, 1 * depthRatio),
@@ -333,19 +332,6 @@ export function Canvas() {
     });
 
     tableLegsRef.forEach((leg, index) => {
-      // leg.traverse((child: any) => {
-      //   if (child.isMesh && child.geometry instanceof THREE.BufferGeometry) {
-      //     const positionArray = child.geometry.attributes.position.array;
-
-      //     for (let i = 0; i < positionArray.length; i += 3) {
-      //       // positionArray[i] *= widthRatio; // x-axis
-      //       positionArray[i + 1] *= heightRatio; // y-axis
-      //       positionArray[i + 2] *= depthRatio; // z-axis
-      //     }
-      //     child.geometry.attributes.position.needsUpdate = true;
-      //   }
-      // });
-
       leg.position.lerp(
         new THREE.Vector3(
           DEFAULT_TABLE_LEG_POSITIONS[index]?.x * widthRatio,
