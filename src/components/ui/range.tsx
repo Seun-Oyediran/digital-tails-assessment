@@ -7,10 +7,11 @@ interface IProps {
   max: number;
   value: number;
   onChange: (val: number) => void;
+  isLoading?: boolean;
 }
 
 export function Range(props: IProps) {
-  const { label, max, min, value, onChange } = props;
+  const { label, max, min, value, onChange, isLoading } = props;
   const [initialValue, setInitialValue] = useState(value);
 
   return (
@@ -38,6 +39,7 @@ export function Range(props: IProps) {
             setInitialValue(clampedValue);
             onChange(clampedValue);
           }}
+          disabled={isLoading}
         />
         <input
           type="range"
@@ -51,6 +53,7 @@ export function Range(props: IProps) {
             setInitialValue(value);
             onChange(value);
           }}
+          disabled={isLoading}
         />
       </div>
     </div>

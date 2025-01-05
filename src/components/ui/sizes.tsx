@@ -18,6 +18,7 @@ export function Sizes() {
             label="Table Width (mm)"
             min={1200}
             max={2400}
+            isLoading={state.loading}
             value={state?.width}
             onChange={(value) => {
               dispatch(setTableWidth(value));
@@ -28,6 +29,7 @@ export function Sizes() {
             label="Table Depth (mm)"
             min={300}
             max={900}
+            isLoading={state.loading}
             value={state?.depth}
             onChange={(value) => {
               dispatch(setTableDepth(value));
@@ -38,6 +40,7 @@ export function Sizes() {
             label="Leg Height (mm)"
             min={500}
             max={1200}
+            isLoading={state.loading}
             value={state?.height}
             onChange={(value) => {
               dispatch(setTableHeight(value));
