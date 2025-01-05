@@ -1,5 +1,5 @@
 {
-  "name": "case-manager",
+  "name": "digital-tails-assessment",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch --silent"
+    "test": "jest test --silent"
   },
   "dependencies": {
     "framer-motion": "^11.0.24",
