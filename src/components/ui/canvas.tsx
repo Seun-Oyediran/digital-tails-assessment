@@ -189,12 +189,14 @@ export function Canvas() {
           }
         });
 
-        tableLeg.scale.set(depthRatio, heightRatio, 1);
-
         DEFAULT_TABLE_LEG_POSITIONS.forEach((pos) => {
           const legClone = tableLeg.clone();
           legClone.position.set(pos.x * widthRatio, pos.y, pos.z);
           legClone.rotation.y = pos.rotation;
+          tableLeg.scale.lerp(
+            new THREE.Vector3(1 * depthRatio, 1 * heightRatio, 1),
+            1
+          );
           tableLegsRef.push(legClone);
           scene.add(legClone);
         });
